@@ -1,13 +1,16 @@
 # AngularJS Template loader for [webpack](http://webpack.github.io/)
 
+Includes your AngularJS templates into your webpack Javascript Bundle. Pre-loads the AngularJS template cache
+to remove initial load times of templates.
 
 ## Usage
 
 [Documentation: Using loaders](http://webpack.github.io/docs/using-loaders.html)
 
 ``` javascript
-var css = require("!ngtemplate?module=myTemplates&relativeTo=/projects/test/app!html!file.html");
-// => return the javascript "angular.module('myTemplates').run(['$templateCache', function(c) { c.put('file.html', "<content of file.html processed by html-loader>") }]);"
+require("!ngtemplate?module=myTemplates&relativeTo=/projects/test/app!html!file.html");
+// => returns the javascript:
+// angular.module('myTemplates').run(['$templateCache', function(c) { c.put('file.html', "<file.html processed by html-loader>") }]);
 ```
 
 ### webpack config
@@ -20,7 +23,8 @@ module.exports = {
     loaders: [
       {
         test: /\.html$/,
-        loader: "ngtemplate!html?module=myTemplates&relativeTo=" + (path.resolve(__dirname, './app/'))
+        loader: "ngtemplate!html?module=myTemplates&relativeTo=" + 
+            (path.resolve(__dirname, './app/'))
       }
     ]
   }
