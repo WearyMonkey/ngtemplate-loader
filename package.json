@@ -1,0 +1,28 @@
+{
+    "name": "ngtemplate-loader",
+    "version": "0.1.0",
+    "description": "Include AngularJS templates in the Webpack bundle and preload the template cache.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/WearyMonkey/ngtemplate-loader.git"
+    },
+    "keywords": [
+        "webpack",
+        "angularjs",
+        "loader"
+    ],
+    "author": "WearyMonkey",
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "http://www.opensource.org/licenses/mit-license.php"
+        }
+    ],
+    "dependencies": {
+        "loader-utils": "~0.2.2"
+    }
+}
