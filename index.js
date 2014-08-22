@@ -7,9 +7,15 @@ module.exports = function (content) {
     var ngModule = query.module || 'ngTemplates';
     var relativeTo = query.relativeTo || '';
     var path = this.resource.slice(relativeTo.length); // get the base path
-    var html = content.match(/^module\.exports/) ?
-        content.substr(findQuote(content, false), findQuote(content, true)) :
-        content;
+    var html;
+
+    if (content.match(/^module\.exports/)) {
+        var firstQuote = findQuote(content, false);
+        var secondQuote = findQuote(content, true);
+        html = content.substr(firstQuote, secondQuote - firstQuote + 1);
+    } else {
+        html = content;
+    }
 
     return "angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put('"+ path +"', " + html + ") }]);";
 
