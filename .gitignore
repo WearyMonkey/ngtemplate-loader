@@ -1,2 +1,4 @@
 node_modules
 .idea
+test/test.js
+test/npm-debug.log
