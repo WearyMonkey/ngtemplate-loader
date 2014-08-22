@@ -1,6 +1,6 @@
 {
   "name": "ngtemplate-loader",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Include AngularJS templates in the Webpack bundle and preload the template cache.",
   "main": "index.js",
   "scripts": {
