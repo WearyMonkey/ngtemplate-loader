@@ -6,7 +6,11 @@ module.exports = function (content) {
     var query = loaderUtils.parseQuery(this.query);
     var ngModule = query.module || 'ngTemplates';
     var relativeTo = query.relativeTo || '';
-    var path = this.resource.slice(relativeTo.length); // get the base path
+    var relativeStartIndex = this.resource.indexOf(relativeTo);
+    if (relativeStartIndex === -1){
+    	throw 'The path for file doesn\'t contains relativeTo param';
+    }
+    var path = this.resource.slice(relativeStartIndex + relativeTo.length); // get the base path
     var html;
 
     if (content.match(/^module\.exports/)) {
