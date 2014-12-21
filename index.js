@@ -7,12 +7,13 @@ module.exports = function (content) {
     var query = loaderUtils.parseQuery(this.query);
     var ngModule = query.module || 'ngTemplates';
     var relativeTo = query.relativeTo || '';
+    var prefix = query.prefix || '';
     relativeTo.replace('/', path.sep);
-    var relativeStartIndex = this.resource.indexOf(relativeTo);
-    if (relativeStartIndex === -1){
-    	throw 'The path for file doesn\'t contains relativeTo param';
+    var relativeToMatch = this.resource.match(relativeTo);
+    if (relativeToMatch === null) {
+        throw 'The path for file doesn\'t contains relativeTo param';
     }
-    var filePath = this.resource.slice(relativeStartIndex + relativeTo.length); // get the base path
+    var filePath = prefix + this.resource.slice(relativeToMatch.index + relativeToMatch[0].length); // get the base path
     var html;
 
     if (content.match(/^module\.exports/)) {
