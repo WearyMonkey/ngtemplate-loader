@@ -8,12 +8,29 @@ module.exports = function (content) {
     var ngModule = query.module || 'ngTemplates';
     var relativeTo = query.relativeTo || '';
     var prefix = query.prefix || '';
-    relativeTo.replace('/', path.sep);
-    var relativeToMatch = this.resource.match(relativeTo);
-    if (relativeToMatch === null) {
+    var absolute = false;
+
+    // if a unix path starts with // we treat is as an absolute path e.g. //Users/wearymonkey
+    // if we're on windows, then we ignore the / prefix as windows absolute paths are unique anyway e.g. C:\Users\wearymonkey
+    if (relativeTo[0] == '/') {
+        if (path.sep == '\\') { // we're on windows
+            relativeTo = relativeTo.substring(1);
+        } else if (relativeTo[1] == '/') {
+            absolute = true;
+            relativeTo = relativeTo.substring(1);
+        }
+    }
+
+    // convert unix paths into window paths / -> \
+    relativeTo = relativeTo.replace(/\//g, path.sep);
+    prefix = prefix.replace(/\//g, path.sep);
+
+    var relativeToIndex = this.resource.indexOf(relativeTo);
+    if (relativeToIndex === -1 || (absolute && relativeToIndex !== 0)) {
         throw 'The path for file doesn\'t contains relativeTo param';
     }
-    var filePath = prefix + this.resource.slice(relativeToMatch.index + relativeToMatch[0].length); // get the base path
+
+    var filePath = prefix + this.resource.slice(relativeToIndex + relativeTo.length); // get the base path
     var html;
 
     if (content.match(/^module\.exports/)) {

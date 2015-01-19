@@ -15,20 +15,20 @@ require("!ngtemplate?module=myTemplates&relativeTo=/projects/test/app!html!file.
 
 ### RelativeTo and Prefix
 
-You can set the base path of your templates using `relativeTo` and `prefix` parameters. `relativeTo` is a regex which is used
+You can set the base path of your templates using `relativeTo` and `prefix` parameters. `relativeTo` is used
 to strip a matching prefix from the absolute path of the input html file. `prefix` is then appended to path.
 
-As `relativeTo` is regex, using a simple path value e.g. `/src/` will match anywhere in the absolute path of the html file. e.g.
+The prefix of the path up to and including the first `relativeTo` match is stripped, e.g.
 
 ``` javascript
 require("!ngtemplate?relativeTo=/src/!html!/test/src/test.html");
 // c.put('test.html', ...)
 ```
 
-To match the from the start of the absolute path, you can use the regex start of string anchor `^`, e.g.
+To match the from the start of the absolute path prefix a '//', e.g.
 
 ``` javascript
-require("!ngtemplate?relativeTo=^/Users/WearyMonkey/project/test/!html!/test/src/test.html");
+require("!ngtemplate?relativeTo=//Users/WearyMonkey/project/test/!html!/test/src/test.html");
 // c.put('src/test.html', ...)
 ```
 
