@@ -3,14 +3,17 @@
 Includes your AngularJS templates into your webpack Javascript Bundle. Pre-loads the AngularJS template cache
 to remove initial load times of templates.
 
+ngTemplate loader does not minify or process your HTML at all, and instead uses the standard loaders such as html-loader
+or raw-loader. This gives you the flexibility to pick and choose your HTML loaders.
+
 ## Usage
 
 [Documentation: Using loaders](http://webpack.github.io/docs/using-loaders.html)
 
 ``` javascript
-require("!ngtemplate?module=myTemplates&relativeTo=/projects/test/app!html!file.html");
+require("!ngtemplate?relativeTo=/projects/test/app!html!file.html");
 // => returns the javascript:
-// angular.module('myTemplates').run(['$templateCache', function(c) { c.put('file.html', "<file.html processed by html-loader>") }]);
+// angular.module('ng').run(['$templateCache', function(c) { c.put('file.html', "<file.html processed by html-loader>") }]);
 ```
 
 ### RelativeTo and Prefix
@@ -39,6 +42,17 @@ require("!ngtemplate?relativeTo=src/&prefix=build/!html!/test/src/test.html");
 // c.put('build/test.html', ...)
 ```
 
+### Module
+
+By default ngTemplate loader adds a run method to the global 'ng' module which does not need to explicitly required by your app.
+You can override this by setting the `module` parameter, e.g.
+
+``` javascript
+require("!ngtemplate?module=myTemplates&relativeTo=/projects/test/app!html!file.html");
+// => returns the javascript:
+// angular.module('myTemplates').run(['$templateCache', function(c) { c.put('file.html', "<file.html processed by html-loader>") }]);
+```
+
 ## webpack config
 
 It's recommended to adjust your `webpack.config` so `ngtemplate!html!` is applied automatically on all files ending on `.html`:
@@ -49,8 +63,7 @@ module.exports = {
     loaders: [
       {
         test: /\.html$/,
-        loader: "ngtemplate?module=myTemplates&relativeTo=^" +
-            (path.resolve(__dirname, './app/')) + "!html"
+        loader: "ngtemplate?relativeTo=(path.resolve(__dirname, './app')) + "/!html"
       }
     ]
   }

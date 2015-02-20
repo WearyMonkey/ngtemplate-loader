@@ -5,7 +5,7 @@ module.exports = function (content) {
     this.cacheable && this.cacheable();
 
     var query = loaderUtils.parseQuery(this.query);
-    var ngModule = query.module || 'ngTemplates';
+    var ngModule = query.module || 'ng'; // ng is the global angular module that does not need to explicitly required
     var relativeTo = query.relativeTo || '';
     var prefix = query.prefix || '';
     var absolute = false;
@@ -41,7 +41,7 @@ module.exports = function (content) {
         html = content;
     }
 
-    return "angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put('"+ filePath +"', " + html + ") }]);";
+    return "window.angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put('"+ filePath +"', " + html + ") }]);";
 
     function findQuote(content, backwards) {
         var i = backwards ? content.length - 1 : 0;
