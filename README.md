@@ -10,9 +10,22 @@ or raw-loader. This gives you the flexibility to pick and choose your HTML loade
 
 [Documentation: Using loaders](http://webpack.github.io/docs/using-loaders.html)
 
+ngTemplate loader will export the path of the HTML file, so you can use require directly AngularJS with templateUrl parameters e.g. 
+
+``` javascript
+app.directive('testDirective', function() {
+    return {
+        restrict: 'E',
+        templateUrl: require('ngtemplate!html!./test.html')
+    }
+});
+```
+
+ngTemplate creates a JS module that initialises the $templateCache with the HTML under the file path e.g. 
+
 ``` javascript
 require("!ngtemplate?relativeTo=/projects/test/app!html!file.html");
-// => returns the javascript:
+// => generates the javascript:
 // angular.module('ng').run(['$templateCache', function(c) { c.put('file.html', "<file.html processed by html-loader>") }]);
 ```
 
