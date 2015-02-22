@@ -41,7 +41,9 @@ module.exports = function (content) {
         html = content;
     }
 
-    return "window.angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put('"+ filePath +"', " + html + ") }]);";
+    return "var path = '"+filePath+"';\n" +
+        "window.angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put(path, " + html + ") }]);\n" +
+        "module.exports = path;";
 
     function findQuote(content, backwards) {
         var i = backwards ? content.length - 1 : 0;
