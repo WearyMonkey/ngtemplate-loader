@@ -66,6 +66,18 @@ require("!ngtemplate?module=myTemplates&relativeTo=/projects/test/app!html!file.
 // angular.module('myTemplates').run(['$templateCache', function(c) { c.put('file.html', "<file.html processed by html-loader>") }]);
 ```
 
+### Path Separators (Or using on Windows)
+
+ By default, ngTemplate loader will assume you are using unix style path separators '/' for html paths in your project.
+ e.g. `templateUrl: '/views/app.html'`. If however you want to use Window's style path separators '\'
+ e.g. `templateUrl: '\\views\\app.html'` you can override the separator by providing the pathSep parameter.
+
+ ```javascript
+ require('ngtemplate?pathSep=\\!html!.\\test.html')
+ ```
+
+ Make sure you use the same path separator for the `prefix` and `relativeTo` parameters, all templateUrls and in your webpack.config.js file.
+
 ## webpack config
 
 It's recommended to adjust your `webpack.config` so `ngtemplate!html!` is applied automatically on all files ending on `.html`:

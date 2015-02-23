@@ -15,3 +15,4 @@ console.log(require('../../index.js?relativeTo=' + __dirname + '/!html-loader!./
 console.log(require('../../index.js?relativeTo=/' + __dirname + '/!html-loader!./test.html'));
 console.log(require('../../index.js?prefix=/prefix!html-loader!./test.html'));
 console.log(require('../../index.js?prefix=/prefix/&relativeTo=/' + __dirname + '/!html-loader!./test.html'));
+console.log(require('../../index.js?pathSep=\\&prefix=\\prefix\\&relativeTo=' + __dirname + '\\!html-loader!.\\test.html'));
