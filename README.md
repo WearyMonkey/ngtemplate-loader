@@ -6,6 +6,10 @@ to remove initial load times of templates.
 ngTemplate loader does not minify or process your HTML at all, and instead uses the standard loaders such as html-loader
 or raw-loader. This gives you the flexibility to pick and choose your HTML loaders.
 
+## Install
+
+`npm install ngtemplate-loader --save`
+
 ## Usage
 
 [Documentation: Using loaders](http://webpack.github.io/docs/using-loaders.html)
@@ -151,10 +155,6 @@ app.directive('myDirective', function() {
     }
 });
 ```
-
-## Install
-
-`npm install ngtemplate-loader`
 
 ## License
 
