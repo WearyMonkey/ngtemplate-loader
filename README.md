@@ -13,6 +13,8 @@ or raw-loader. This gives you the flexibility to pick and choose your HTML loade
 ngTemplate loader will export the path of the HTML file, so you can use require directly AngularJS with templateUrl parameters e.g. 
 
 ``` javascript
+require('ngtemplate!html!./test.html');
+
 app.directive('testDirective', function() {
     return {
         restrict: 'E',
@@ -20,6 +22,8 @@ app.directive('testDirective', function() {
     }
 });
 ```
+
+To remove the extra `require`, check out the [Baggage Example](#baggage-example) below.
 
 ngTemplate creates a JS module that initialises the $templateCache with the HTML under the file path e.g. 
 
@@ -78,7 +82,7 @@ require("!ngtemplate?module=myTemplates&relativeTo=/projects/test/app!html!file.
 
  Make sure you use the same path separator for the `prefix` and `relativeTo` parameters, all templateUrls and in your webpack.config.js file.
 
-## webpack config
+## Webpack Config
 
 It's recommended to adjust your `webpack.config` so `ngtemplate!html!` is applied automatically on all files ending on `.html`:
 
@@ -96,6 +100,55 @@ module.exports = {
 ```
 
 Then you only need to write: `require("file.html")`.
+
+## Baggage Example
+
+ngTemplate loader works well with the [Baggage Loader](https://github.com/deepsweet/baggage-loader) to remove all those 
+extra HTML and CSS requires. See an example of a directive and webpack.config.js below. Or take a look at more complete
+example in the examples/baggage folder.
+
+With a folder structure:
+
+app/
+├── app.js
+├── index.html
+├── webpack.config.js
+└── my-directive/
+    ├── my-directive.js
+    ├── my-directive.css
+    └── my-directive.html
+
+and a webpack.config.js like:
+
+``` javascript
+module.exports = {
+  module: {
+    preLoaders: [
+      { 
+        test: /\.js$/, 
+        loader: 'baggage?[file].html&[file].css' 
+      }
+    ],
+    loaders: [
+      {
+        test: /\.html$/,
+        loader: "ngtemplate?relativeTo=" + __dirname + "/!html"
+      }
+    ]
+  }
+};
+```
+
+You can now skip the initial require of html and css like so:
+
+``` javascript
+app.directive('myDirective', function() {
+    return {
+        restrict: 'E',
+        templateUrl: require('./my-directive.html')
+    }
+});
+```
 
 ## Install
 
