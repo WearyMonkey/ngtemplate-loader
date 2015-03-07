@@ -109,6 +109,7 @@ example in the examples/baggage folder.
 
 With a folder structure:
 
+```
 app/
 ├── app.js
 ├── index.html
@@ -117,6 +118,7 @@ app/
     ├── my-directive.js
     ├── my-directive.css
     └── my-directive.html
+```
 
 and a webpack.config.js like:
 
