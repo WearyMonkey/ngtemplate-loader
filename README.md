@@ -17,12 +17,12 @@ or raw-loader. This gives you the flexibility to pick and choose your HTML loade
 ngTemplate loader will export the path of the HTML file, so you can use require directly AngularJS with templateUrl parameters e.g. 
 
 ``` javascript
-require('ngtemplate!html!./test.html');
+var templateUrl = require('ngtemplate!html!./test.html');
 
 app.directive('testDirective', function() {
     return {
         restrict: 'E',
-        templateUrl: require('ngtemplate!html!./test.html')
+        templateUrl: templateUrl
     }
 });
 ```
