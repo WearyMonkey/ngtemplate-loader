@@ -105,6 +105,23 @@ module.exports = {
 
 Then you only need to write: `require("file.html")`.
 
+## Dynamic Requires
+
+Webpack's dynamic requires do not implicitly call the IIFE wrapping each
+call to `window.angular.module('ng').run(...)`, so if you use them to
+require a folder full of partials, you must manually iterate through the
+resulting object and resolve each dependency in order to accomodate angular's
+side-effects oriented module system:
+
+``` javascript
+var templates = require.context('.', false, /\.html$/);
+
+templates.keys().forEach(function(key) {
+  templates(key);
+});
+
+```
+
 ## Baggage Example
 
 ngTemplate loader works well with the [Baggage Loader](https://github.com/deepsweet/baggage-loader) to remove all those 
