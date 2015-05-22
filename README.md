@@ -37,6 +37,19 @@ require("!ngtemplate?relativeTo=/projects/test/app!html!file.html");
 // angular.module('ng').run(['$templateCache', function(c) { c.put('file.html', "<file.html processed by html-loader>") }]);
 ```
 
+ngTemplate loader can also be used to export content the HTML file if `exportHtml` is set to `true`, so you can use require directly AngularJS with template parameters e.g. 
+
+``` javascript
+var templateContent = require('ngtemplate?exportHtml=true!html!./test.html');
+
+app.directive('testDirective', function() {
+    return {
+        restrict: 'E',
+        template: templateContent
+    }
+});
+```
+
 ### RelativeTo and Prefix
 
 You can set the base path of your templates using `relativeTo` and `prefix` parameters. `relativeTo` is used
