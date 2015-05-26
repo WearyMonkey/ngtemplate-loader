@@ -8,7 +8,7 @@ module.exports = function (content) {
     var query = loaderUtils.parseQuery(this.query);
     var ngModule = query.module || 'ng'; // ng is the global angular module that does not need to explicitly required
     var relativeTo = query.relativeTo || '';
-    var exportHtml = query.exportHtml === "true";
+    var exportHtml = query.exportHtml === "true" || query.exportHtml === true;
     var prefix = query.prefix || '';
     var absolute = false;
     var pathSep = query.pathSep || '/';
