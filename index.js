@@ -48,6 +48,8 @@ module.exports = function (content) {
         html = content;
     }
 
+    html = makeRequireFuncWebpackable(html);
+
     return "var path = '"+jsesc(filePath)+"';\n" +
         "var html = " + html + ";\n" +
         "window.angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put(path, html) }]);\n" +
@@ -64,6 +66,10 @@ module.exports = function (content) {
         return -1;
     }
 
+    function makeRequireFuncWebpackable(string) {
+        return string.replace(/=\\('|")require\(([^\\]+)\)\\(\1)/gi, '=\\"\'" + require($2) + "\'\\"');
+    }
+    
     // source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Using_Special_Characters
     function escapeRegExp(string) {
         return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
