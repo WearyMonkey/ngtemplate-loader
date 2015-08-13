@@ -47,6 +47,8 @@ module.exports = function (content) {
     } else {
         html = content;
     }
+    
+    html = makeRequireFuncWebpackable(html);
 
     return "var path = '"+jsesc(filePath)+"';\n" +
         "var html = " + html + ";\n" +
@@ -62,6 +64,10 @@ module.exports = function (content) {
             i += backwards ? -1 : 1;
         }
         return -1;
+    }
+    
+    function makeRequireFuncWebpackable(string) {
+        return string.replace(/=\\"require\(([^\\]+)\)\\"/g, '\\"" + require($1) + ")\\"');
     }
 
     // source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Using_Special_Characters
