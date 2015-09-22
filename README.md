@@ -27,6 +27,7 @@ app.directive('testDirective', function() {
 });
 ```
 
+
 To remove the extra `require`, check out the [Baggage Example](#baggage-example) below.
 
 ngTemplate creates a JS module that initialises the $templateCache with the HTML under the file path e.g. 
@@ -35,6 +36,19 @@ ngTemplate creates a JS module that initialises the $templateCache with the HTML
 require("!ngtemplate?relativeTo=/projects/test/app!html!file.html");
 // => generates the javascript:
 // angular.module('ng').run(['$templateCache', function(c) { c.put('file.html', "<file.html processed by html-loader>") }]);
+```
+
+
+## Beware of requiring from the directive definition
+
+The following code is wrong, Because it'll operate only after angular bootstraps:
+```
+app.directive('testDirective', function() {
+    return {
+        restrict: 'E',
+        templateUrl: require('ngtemplate!html!./test.html') // <- WRONG !
+    }
+});
 ```
 
 ### RelativeTo and Prefix
