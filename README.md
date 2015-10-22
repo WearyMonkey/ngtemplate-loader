@@ -33,9 +33,9 @@ To remove the extra `require`, check out the [Baggage Example](#baggage-example)
 ngTemplate creates a JS module that initialises the $templateCache with the HTML under the file path e.g. 
 
 ``` javascript
-require("!ngtemplate?relativeTo=/projects/test/app!html!file.html");
+require('!ngtemplate?relativeTo=/projects/test/app!html!file.html');
 // => generates the javascript:
-// angular.module('ng').run(['$templateCache', function(c) { c.put('file.html', "<file.html processed by html-loader>") }]);
+// angular.module('ng').run(['$templateCache', function(c) { c.put('file.html', '<file.html processed by html-loader>') }]);
 ```
 
 
@@ -59,21 +59,21 @@ to strip a matching prefix from the absolute path of the input html file. `prefi
 The prefix of the path up to and including the first `relativeTo` match is stripped, e.g.
 
 ``` javascript
-require("!ngtemplate?relativeTo=/src/!html!/test/src/test.html");
+require('!ngtemplate?relativeTo=/src/!html!/test/src/test.html');
 // c.put('test.html', ...)
 ```
 
 To match the from the start of the absolute path prefix a '//', e.g.
 
 ``` javascript
-require("!ngtemplate?relativeTo=//Users/WearyMonkey/project/test/!html!/test/src/test.html");
+require('!ngtemplate?relativeTo=//Users/WearyMonkey/project/test/!html!/test/src/test.html');
 // c.put('src/test.html', ...)
 ```
 
 You can combine `relativeTo` and `prefix` to replace the prefix in the absolute path, e.g.
 
 ``` javascript
-require("!ngtemplate?relativeTo=src/&prefix=build/!html!/test/src/test.html");
+require('!ngtemplate?relativeTo=src/&prefix=build/!html!/test/src/test.html');
 // c.put('build/test.html', ...)
 ```
 
@@ -83,9 +83,9 @@ By default ngTemplate loader adds a run method to the global 'ng' module which d
 You can override this by setting the `module` parameter, e.g.
 
 ``` javascript
-require("!ngtemplate?module=myTemplates&relativeTo=/projects/test/app!html!file.html");
+require('!ngtemplate?module=myTemplates&relativeTo=/projects/test/app!html!file.html');
 // => returns the javascript:
-// angular.module('myTemplates').run(['$templateCache', function(c) { c.put('file.html', "<file.html processed by html-loader>") }]);
+// angular.module('myTemplates').run(['$templateCache', function(c) { c.put('file.html', '<file.html processed by html-loader>') }]);
 ```
 
 ### Path Separators (Or using on Windows)
@@ -110,14 +110,14 @@ module.exports = {
     loaders: [
       {
         test: /\.html$/,
-        loader: "ngtemplate?relativeTo=" + (path.resolve(__dirname, './app')) + "/!html"
+        loader: 'ngtemplate?relativeTo=' + (path.resolve(__dirname, './app')) + '/!html'
       }
     ]
   }
 };
 ```
 
-Then you only need to write: `require("file.html")`.
+Then you only need to write: `require('file.html')`.
 
 ## Dynamic Requires
 
@@ -169,7 +169,7 @@ module.exports = {
     loaders: [
       {
         test: /\.html$/,
-        loader: "ngtemplate?relativeTo=" + __dirname + "/!html"
+        loader: 'ngtemplate?relativeTo=' + __dirname + '/!html'
       }
     ]
   }
