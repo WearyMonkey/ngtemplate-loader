@@ -8,7 +8,7 @@ or raw-loader. This gives you the flexibility to pick and choose your HTML loade
 
 ## Install
 
-`npm install ngtemplate-loader --save`
+`npm install ngtemplate-loader --save-dev`
 
 ## Usage
 
