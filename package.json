@@ -27,8 +27,11 @@
     "loader-utils": "~0.2.6"
   },
   "devDependencies": {
+    "apply-loader": "^0.1.0",
     "baggage-loader": "^0.2.1",
     "html-loader": "^0.2.2",
+    "jade": "^1.11.0",
+    "jade-loader": "^0.7.1",
     "raw-loader": "^0.5.1",
     "webpack": "^1.7.0"
   }
