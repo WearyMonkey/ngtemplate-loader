@@ -4,7 +4,7 @@
   "description": "Include AngularJS templates in the Webpack bundle and preload the template cache.",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/webpack/bin/webpack.js --config=test/webpack.config.js"
+    "test": "webpack --config=test/webpack.config.js"
   },
   "repository": {
     "type": "git",
