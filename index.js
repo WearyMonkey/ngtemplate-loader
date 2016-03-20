@@ -12,6 +12,7 @@ module.exports = function (content) {
     var absolute = false;
     var pathSep = query.pathSep || '/';
     var resource = this.resource;
+    var filePathRegexStr = query.filePathRegex;
     var pathSepRegex = new RegExp(escapeRegExp(path.sep), 'g');
 
     // if a unix path starts with // we treat is as an absolute path e.g. //Users/wearymonkey
@@ -29,7 +30,7 @@ module.exports = function (content) {
     if (path.sep != pathSep) {
         relativeTo = relativeTo.replace(pathSepRegex, pathSep);
         prefix = prefix.replace(pathSepRegex, pathSep);
-        resource = resource.replace(pathSepRegex, pathSep)
+        resource = resource.replace(pathSepRegex, pathSep);
     }
 
     var relativeToIndex = resource.indexOf(relativeTo);
@@ -38,6 +39,13 @@ module.exports = function (content) {
     }
 
     var filePath = prefix + resource.slice(relativeToIndex + relativeTo.length); // get the base path
+
+    if (filePathRegexStr) {
+        var filePathRegexParts = filePathRegexStr.split('/');
+        var filePathRegex = new RegExp(filePathRegexParts[1], filePathRegexParts[3]);
+        filePath = filePath.replace(filePathRegex, filePathRegexParts[2]);
+    }
+
     var html;
 
     if (content.match(/^module\.exports/)) {
