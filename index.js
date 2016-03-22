@@ -9,6 +9,7 @@ module.exports = function (content) {
     var ngModule = query.module || 'ng'; // ng is the global angular module that does not need to explicitly required
     var relativeTo = query.relativeTo || '';
     var prefix = query.prefix || '';
+    var exportVar = query.raw ? 'html' : 'path';
     var absolute = false;
     var pathSep = query.pathSep || '/';
     var resource = this.resource;
@@ -51,7 +52,7 @@ module.exports = function (content) {
     return "var path = '"+jsesc(filePath)+"';\n" +
         "var html = " + html + ";\n" +
         "window.angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put(path, html) }]);\n" +
-        "module.exports = path;";
+        "module.exports = " + exportVar + ";";
 
     function findQuote(content, backwards) {
         var i = backwards ? content.length - 1 : 0;
