@@ -100,6 +100,18 @@ require('!ngtemplate?module=myTemplates&relativeTo=/projects/test/app!html!file.
 
  Make sure you use the same path separator for the `prefix` and `relativeTo` parameters, all templateUrls and in your webpack.config.js file.
 
+### Using with npm requires
+
+This module relies on angular being available on `window` object. However, in cases angular is connected from `node_modules` via `require('angular')`, option to force this module to get the angular should be used:
+
+```javascript
+require('!ngtemplate?requireAngular!html!file.html');
+
+// => generates the javascript:
+// var angular = require('angular');
+// angular.module('ng').run(['$templateCache', function(c) { c.put('file.html', '<file.html processed by html-loader>') }]);
+```
+
 ## Webpack Config
 
 It's recommended to adjust your `webpack.config` so `ngtemplate!html!` is applied automatically on all files ending on `.html`:
