@@ -1,6 +1,8 @@
 var loaderUtils = require("loader-utils");
 var path = require('path');
 var jsesc = require('jsesc');
+var SingleQuoteMatcher = /^module\.exports[^'"]+?('.*')[^'"]*/;
+var DoubleQuoteMatcher = /^module\.exports[^'"]+?(".*")[^'"]*/;
 
 module.exports = function (content) {
     this.cacheable && this.cacheable();
@@ -39,11 +41,11 @@ module.exports = function (content) {
     }
 
     var filePath = prefix + resource.slice(relativeToIndex + relativeTo.length); // get the base path
-    var html, match = content.match(/^module\.exports.+?(".*")/);
+    var html, match = content.match(DoubleQuoteMatcher) || content.match(SingleQuoteMatcher);
 
     // if match, html is the captured match
     if (match) {
-        html = match[1]
+        html = match[1];
     } else {
         html = content;
     }
