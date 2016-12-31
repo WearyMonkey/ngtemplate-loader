@@ -41,6 +41,8 @@ module.exports = function (content) {
     var filePath = prefix + resource.slice(relativeToIndex + relativeTo.length); // get the base path
     var html;
 
+    this.addDependency(filePath);
+
     if (content.match(/^module\.exports/)) {
         var firstQuote = findQuote(content, false);
         var secondQuote = findQuote(content, true);
