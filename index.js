@@ -35,7 +35,7 @@ module.exports = function (content) {
 
     var relativeToIndex = resource.indexOf(relativeTo);
     if (relativeToIndex === -1 || (absolute && relativeToIndex !== 0)) {
-        throw 'The path for file doesn\'t contain relativeTo param';
+        throw new Error('The path for file doesn\'t contain relativeTo param');
     }
 
     var filePath = prefix + resource.slice(relativeToIndex + relativeTo.length); // get the base path
