@@ -1,6 +1,8 @@
 var loaderUtils = require("loader-utils");
 var path = require('path');
 var jsesc = require('jsesc');
+var SingleQuoteMatcher = /^module\.exports[^'"]+?('.*')[^'"]*/;
+var DoubleQuoteMatcher = /^module\.exports[^'"]+?(".*")[^'"]*/;
 
 module.exports = function (content) {
     this.cacheable && this.cacheable();
@@ -39,12 +41,11 @@ module.exports = function (content) {
     }
 
     var filePath = prefix + resource.slice(relativeToIndex + relativeTo.length); // get the base path
-    var html;
+    var html, match = content.match(DoubleQuoteMatcher) || content.match(SingleQuoteMatcher);
 
-    if (content.match(/^module\.exports/)) {
-        var firstQuote = findQuote(content, false);
-        var secondQuote = findQuote(content, true);
-        html = content.substr(firstQuote, secondQuote - firstQuote + 1);
+    // if match, html is the captured match
+    if (match) {
+        html = match[1];
     } else {
         html = content;
     }
@@ -54,17 +55,6 @@ module.exports = function (content) {
         (requireAngular ? "var angular = require('angular');\n" : "window.") +
         "angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put(path, html) }]);\n" +
         "module.exports = path;";
-
-    function findQuote(content, backwards) {
-        var i = backwards ? content.length - 1 : 0;
-        while (i >= 0 && i < content.length) {
-            if (content[i] == '"' || content[i] == "'") {
-                return i;
-            }
-            i += backwards ? -1 : 1;
-        }
-        return -1;
-    }
 
     // source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Using_Special_Characters
     function escapeRegExp(string) {
