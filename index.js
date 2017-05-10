@@ -5,7 +5,7 @@ var jsesc = require('jsesc');
 module.exports = function (content) {
     this.cacheable && this.cacheable();
 
-    var query = loaderUtils.getOptions();
+    var query = loaderUtils.getOptions(this);
     var ngModule = query.module || 'ng'; // ng is the global angular module that does not need to explicitly required
     var relativeTo = query.relativeTo || '';
     var prefix = query.prefix || '';
