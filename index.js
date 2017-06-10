@@ -5,29 +5,29 @@ var jsesc = require('jsesc');
 module.exports = function (content) {
     this.cacheable && this.cacheable();
 
-    var query = loaderUtils.getOptions(this);
-    var ngModule = query.module || 'ng'; // ng is the global angular module that does not need to explicitly required
-    var relativeTo = query.relativeTo || '';
-    var prefix = query.prefix || '';
-    var requireAngular = !!query.requireAngular || false;
+    var options = loaderUtils.getOptions(this) || {};
+    var ngModule = getAndInterpolateOption.call(this, 'module', 'ng'); // ng is the global angular module that does not need to explicitly required
+    var relativeTo = getAndInterpolateOption.call(this, 'relativeTo', '');
+    var prefix = getAndInterpolateOption.call(this, 'prefix', '');
+    var requireAngular = !!options.requireAngular || false;
     var absolute = false;
-    var pathSep = query.pathSep || '/';
+    var pathSep = options.pathSep || '/';
     var resource = this.resource;
     var pathSepRegex = new RegExp(escapeRegExp(path.sep), 'g');
 
     // if a unix path starts with // we treat is as an absolute path e.g. //Users/wearymonkey
     // if we're on windows, then we ignore the / prefix as windows absolute paths are unique anyway e.g. C:\Users\wearymonkey
-    if (relativeTo[0] == '/') {
-        if (path.sep == '\\') { // we're on windows
+    if (relativeTo[0] === '/') {
+        if (path.sep === '\\') { // we're on windows
             relativeTo = relativeTo.substring(1);
-        } else if (relativeTo[1] == '/') {
+        } else if (relativeTo[1] === '/') {
             absolute = true;
             relativeTo = relativeTo.substring(1);
         }
     }
 
     // normalise the path separators
-    if (path.sep != pathSep) {
+    if (path.sep !== pathSep) {
         relativeTo = relativeTo.replace(pathSepRegex, pathSep);
         prefix = prefix.replace(pathSepRegex, pathSep);
         resource = resource.replace(pathSepRegex, pathSep)
@@ -38,7 +38,7 @@ module.exports = function (content) {
         throw new Error('The path for file doesn\'t contain relativeTo param');
     }
 
-    var filePath = prefix + resource.slice(relativeToIndex + relativeTo.length); // get the base path
+    var filePath = path.join(prefix, resource.slice(relativeToIndex + relativeTo.length)); // get the base path
     var html;
 
     if (content.match(/^module\.exports/)) {
@@ -55,10 +55,20 @@ module.exports = function (content) {
         "angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put(path, html) }]);\n" +
         "module.exports = path;";
 
+    function getAndInterpolateOption(optionKey, def) {
+        return options[optionKey]
+            ? loaderUtils.interpolateName(this, options[optionKey], {
+                context: options.context,
+                content: content,
+                regExp: options[optionKey + 'RegExp'] || options['regExp']
+            })
+            : def
+    }
+
     function findQuote(content, backwards) {
         var i = backwards ? content.length - 1 : 0;
         while (i >= 0 && i < content.length) {
-            if (content[i] == '"' || content[i] == "'") {
+            if (content[i] === '"' || content[i] === "'") {
                 return i;
             }
             i += backwards ? -1 : 1;
