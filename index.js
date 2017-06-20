@@ -38,7 +38,7 @@ module.exports = function (content) {
         throw new Error('The path for file doesn\'t contain relativeTo param');
     }
 
-    var filePath = path.join(prefix, resource.slice(relativeToIndex + relativeTo.length)); // get the base path
+    var filePath = path.join(prefix, resource.slice(relativeToIndex + relativeTo.length)).replace(pathSepRegex, '/'); // get the base path
     var html;
 
     if (content.match(/^module\.exports/)) {
