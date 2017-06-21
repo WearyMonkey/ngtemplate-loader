@@ -19,4 +19,4 @@ console.log(require('../../index.js?prefix=/prefix!html-loader!./test.html'));
 console.log(require('../../index.js?prefix=/prefix/&relativeTo=/' + __dirname + '/!html-loader!./test.html'));
 console.log(require('../../index.js?module=[name]&prefix=[folder]&relativeTo=[path]!html-loader!./test.html'));
 console.log(require('../../index.js?module=[1]&moduleRegExp=test/(.*)/test!html-loader!./test.html'));
-console.log(require('../../index.js?pathSep=\\&prefix=\\prefix\\&relativeTo=' + __dirname + '\\!html-loader!.\\test.html'));
+console.log(require('../../index.js?pathSep=\\&prefix=/prefix/&relativeTo=' + __dirname + '/!html-loader!./test.html'));
