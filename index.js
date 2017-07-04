@@ -14,6 +14,8 @@ module.exports = function (content) {
     var pathSep = options.pathSep || '/';
     var resource = this.resource;
     var pathSepRegex = new RegExp(escapeRegExp(path.sep), 'g');
+    var exportAsEs6Default = options.exportAsEs6Default;
+    var exportAsDefault = options.exportAsDefault;
 
     // if a unix path starts with // we treat is as an absolute path e.g. //Users/wearymonkey
     // if we're on windows, then we ignore the / prefix as windows absolute paths are unique anyway e.g. C:\Users\wearymonkey
@@ -45,7 +47,7 @@ module.exports = function (content) {
         .replace(new RegExp(escapeRegExp(pathSep) + '+', 'g'), pathSep);
     var html;
 
-    if (content.match(/^module\.exports/)) {
+    if (content.match(/(?:^module\.exports)|(?:^export\s+default)|(?:^exports.default)/)) {
         var firstQuote = findQuote(content, false);
         var secondQuote = findQuote(content, true);
         html = content.substr(firstQuote, secondQuote - firstQuote + 1);
@@ -53,11 +55,18 @@ module.exports = function (content) {
         html = content;
     }
 
+    var exportsString = "module.exports = ";
+    if (exportAsDefault) {
+        exportsString = "exports.default = ";
+    } else if (exportAsEs6Default) {
+        exportsString = "export default ";
+    }
+
     return "var path = '"+jsesc(filePath)+"';\n" +
         "var html = " + html + ";\n" +
         (requireAngular ? "var angular = require('angular');\n" : "window.") +
         "angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put(path, html) }]);\n" +
-        "module.exports = path;";
+        exportsString + " path;";
 
     function getAndInterpolateOption(optionKey, def) {
         return options[optionKey]

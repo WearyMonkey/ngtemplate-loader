@@ -108,6 +108,14 @@ and `prefixRegExp` which apply to single parameters, or `regExp` which will appl
 
  Make sure you use the same path separator for the `prefix` and `relativeTo` parameters, all templateUrls and in your webpack.config.js file.
 
+### Export formats
+
+There are different export formats available:
+
++ ```module.exports``` (default, cjs format). "myTemplateUrl" becomes ```module.exports = "myTemplateUrl";```
++ ```exports.default``` (when ```exportAsDefault``` param is set, es6to5 format). "myTemplateUrl" becomes ```exports.default = "myTemplateUrl";```
++ ```export default``` (when ```exportAsEs6Default``` param is set, es6 format). "myTemplateUrl" becomes ```export default "myTemplateUrl";```
+
 ### Using with npm requires
 
 This module relies on angular being available on `window` object. However, in cases angular is connected from `node_modules` via `require('angular')`, option to force this module to get the angular should be used:
