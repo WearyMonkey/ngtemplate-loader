@@ -57,8 +57,31 @@ module.exports = function (content) {
     return `
 var path = '${jsesc(filePath)}';
 var html = ${html};
+
 ${angular}.module('${ngModule}').run(['$templateCache', function(c) { c.put(path, html) }]);
 module.exports = path;
+
+if (module.hot) {
+    module.hot.accept();
+
+    var rootElement = angular.element('[ng-app]');
+    if (!rootElement.length) {
+        rootElement = angular.element(document.body);
+    }
+
+    var injector = rootElement.injector();
+    if (injector) {
+        var $templateCache = injector.get('$templateCache');
+        if ($templateCache) {
+            $templateCache.put(path, html);
+        }
+
+        var $state = injector.get('$state');
+        if ($state) {
+            $state.reload();
+        }
+    }
+}
 `;
 
     function getAndInterpolateOption(optionKey, def) {
