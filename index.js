@@ -10,6 +10,7 @@ module.exports = function (content) {
     var relativeTo = getAndInterpolateOption.call(this, 'relativeTo', '');
     var prefix = getAndInterpolateOption.call(this, 'prefix', '');
     var requireAngular = !!options.requireAngular || false;
+    var async = !!options.async || false;
     var absolute = false;
     var pathSep = options.pathSep || '/';
     var resource = this.resource;
@@ -55,8 +56,11 @@ module.exports = function (content) {
 
     return "var path = '"+jsesc(filePath)+"';\n" +
         "var html = " + html + ";\n" +
-        (requireAngular ? "var angular = require('angular');\n" : "window.") +
-        "angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put(path, html) }]);\n" +
+        (requireAngular ? "var angular = require('angular');\n" : "") +
+        (async ? "var inj=window.angular.element(window.document).injector();\n" +
+            "if(inj){inj.get('$templateCache').put(path,html);} else {\n" : "") +
+        "window.angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put(path, html) }]);" +
+        (async ? "}" : "") + "\n" +
         "module.exports = path;";
 
     function getAndInterpolateOption(optionKey, def) {
