@@ -144,8 +144,10 @@ module.exports = {
     rules: [
       {
         test: /\.html$/,
-        use: [{ loader:'ngtemplate-loader?relativeTo=' + (path.resolve(__dirname, './app')) },
-        { loader: 'html-loader' }] 
+        use: [
+          { loader:'ngtemplate-loader?relativeTo=' + (path.resolve(__dirname, './app')) },
+          { loader: 'html-loader' }
+        ]
       }
     ]
   }
@@ -223,8 +225,10 @@ module.exports = {
       },
       {
         test: /\.html$/,
-        use: [{ loader: 'ngtemplate-loader?relativeTo=' + __dirname + '/' }
-        { loader: 'html-loader' }]]
+        use: [
+          { loader: 'ngtemplate-loader?relativeTo=' + __dirname + '/' },
+          { loader: 'html-loader' }]
+        ]
       }
     ]
   }
