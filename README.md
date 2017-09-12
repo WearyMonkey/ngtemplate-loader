@@ -122,7 +122,7 @@ require('!ngtemplate?requireAngular!html!file.html');
 
 ## Webpack Config
 
-It's recommended to adjust your `webpack.config` so `ngtemplate!html!` is applied automatically on all files ending with `.html`:
+It's recommended to adjust your `webpack.config` so `ngtemplate!html!` is applied automatically on all files ending with `.html`. For Webpack 1 this would be something like:
 
 ``` javascript
 module.exports = {
@@ -136,8 +136,24 @@ module.exports = {
   }
 };
 ```
+For Webpack 2 this would be something like:
 
-Then you only need to write: `require('file.html')`.
+``` javascript
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.html$/,
+        use: [
+          { loader:'ngtemplate-loader?relativeTo=' + (path.resolve(__dirname, './app')) },
+          { loader: 'html-loader' }
+        ]
+      }
+    ]
+  }
+};
+```
+Make sure you already have `html-loader` installed. Then you only need to write: `require('file.html')`.
 
 ## Dynamic Requires
 
@@ -175,7 +191,7 @@ app/
     └── my-directive.html
 ```
 
-and a webpack.config.js like:
+and a webpack.config.js for webpack 1 like:
 
 ``` javascript
 module.exports = {
@@ -190,6 +206,29 @@ module.exports = {
       {
         test: /\.html$/,
         loader: 'ngtemplate?relativeTo=' + __dirname + '/!html'
+      }
+    ]
+  }
+};
+```
+
+For webpack 2 like:
+
+``` javascript
+module.exports = {
+  module: {
+    rules: [
+      { 
+        test: /\.js$/, 
+        enforce: 'pre',
+        use: [{ loader:'baggage?[file].html&[file].css'  }]
+      },
+      {
+        test: /\.html$/,
+        use: [
+          { loader: 'ngtemplate-loader?relativeTo=' + __dirname + '/' },
+          { loader: 'html-loader' }]
+        ]
       }
     ]
   }
