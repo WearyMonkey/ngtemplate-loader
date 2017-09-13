@@ -53,11 +53,11 @@ module.exports = function (content) {
         html = content;
     }
 
-    return "var path = '"+jsesc(filePath)+"';\n" +
+    return (requireAngular ? 'import angular from "angular";\n' : 'var angular = window.angular;\n') +
+        "var path = '"+jsesc(filePath)+"';\n" +
         "var html = " + html + ";\n" +
-        (requireAngular ? "var angular = require('angular');\n" : "window.") +
         "angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put(path, html) }]);\n" +
-        "module.exports = path;";
+        "export default path;";
 
     function getAndInterpolateOption(optionKey, def) {
         return options[optionKey]
