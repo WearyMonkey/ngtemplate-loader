@@ -53,10 +53,16 @@ module.exports = function (content) {
         html = content;
     }
 
-    return "var path = '"+jsesc(filePath)+"';\n" +
+    return "var module;\n" + 
+        "try {\n" +
+            "module = "+ (requireAngular ? "" : "window.") + "angular.module('" + ngModule + "');\n" +
+        "} catch (e) {\n" +
+            "module = "+ (requireAngular ? "" : "window.") + "angular.module('" + ngModule + "', []);\n" +
+        "}\n" +
+        "var path = '"+jsesc(filePath)+"';\n" +
         "var html = " + html + ";\n" +
-        (requireAngular ? "var angular = require('angular');\n" : "window.") +
-        "angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put(path, html) }]);\n" +
+        (requireAngular ? "var angular = require('angular');\n" : "") +
+        "module.run(['$templateCache', function(c) { c.put(path, html) }]);\n" +
         "module.exports = path;";
 
     function getAndInterpolateOption(optionKey, def) {
