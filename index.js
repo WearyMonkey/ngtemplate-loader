@@ -7,7 +7,7 @@ module.exports = function (content) {
 
     var options = loaderUtils.getOptions(this) || {};
     var ngModule = getAndInterpolateOption.call(this, 'module', 'ng'); // ng is the global angular module that does not need to explicitly required
-    var relativeTo = getAndInterpolateOption.call(this, 'relativeTo', '');
+    var relativeTo = path.normalize(getAndInterpolateOption.call(this, 'relativeTo', ''));
     var prefix = getAndInterpolateOption.call(this, 'prefix', '');
     var requireAngular = !!options.requireAngular || false;
     var absolute = false;
