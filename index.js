@@ -45,7 +45,9 @@ module.exports = function (content) {
         .replace(new RegExp(escapeRegExp(pathSep) + '+', 'g'), pathSep);
     var html;
 
-    if (content.match(/^module\.exports/)) {
+    content = content.replace(/\n/g, ' ');
+
+    if (content.match(/module\.exports/)) {
         var firstQuote = findQuote(content, false);
         var secondQuote = findQuote(content, true);
         html = content.substr(firstQuote, secondQuote - firstQuote + 1);
