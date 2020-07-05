@@ -43,21 +43,17 @@ module.exports = function (content) {
         .filter(Boolean)
         .join(pathSep)
         .replace(new RegExp(escapeRegExp(pathSep) + '+', 'g'), pathSep);
-    var html;
 
-    if (content.match(/^module\.exports/)) {
-        var firstQuote = findQuote(content, false);
-        var secondQuote = findQuote(content, true);
-        html = content.substr(firstQuote, secondQuote - firstQuote + 1);
+    var codeStart = "var path = '"+jsesc(filePath)+"';\n";
+    var codeEnd = (requireAngular ? "var angular = require('angular');\n" : "window.") +
+    "angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put(path, code) }]);\n" +
+    'module.exports = path;';
+
+    if (content.match(/module\.exports/)) {
+      return codeStart + content.replace('module.exports = code;', codeEnd);
     } else {
-        html = content;
+      return codeStart + 'var code = "' + content + '";\n' + codeEnd;
     }
-
-    return "var path = '"+jsesc(filePath)+"';\n" +
-        "var html = " + html + ";\n" +
-        (requireAngular ? "var angular = require('angular');\n" : "window.") +
-        "angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put(path, html) }]);\n" +
-        "module.exports = path;";
 
     function getAndInterpolateOption(optionKey, def) {
         return options[optionKey]
@@ -67,17 +63,6 @@ module.exports = function (content) {
                 regExp: options[optionKey + 'RegExp'] || options['regExp']
             })
             : def
-    }
-
-    function findQuote(content, backwards) {
-        var i = backwards ? content.length - 1 : 0;
-        while (i >= 0 && i < content.length) {
-            if (content[i] === '"' || content[i] === "'") {
-                return i;
-            }
-            i += backwards ? -1 : 1;
-        }
-        return -1;
     }
 
     // source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Using_Special_Characters
