@@ -43,20 +43,22 @@ module.exports = function (content) {
         .filter(Boolean)
         .join(pathSep)
         .replace(new RegExp(escapeRegExp(pathSep) + '+', 'g'), pathSep);
-    var html;
-
-    if (content.match(/^module\.exports/)) {
-        var firstQuote = findQuote(content, false);
-        var secondQuote = findQuote(content, true);
-        html = content.substr(firstQuote, secondQuote - firstQuote + 1);
+    
+    // Replace the default export with an assigment to the _module_exports variable.
+    var exportRe = /module\.exports\s*=|export default\s+/g;
+    if (exportRe.test(content)) {
+        contentWithVar = content.replace(exportRe, 'var _module_exports =')                
     } else {
-        html = content;
+        // If there is no default export, try just using the content. 
+        // Probably doesn't work, but it's been here forever so can't remove now :)
+        contentWithVar = "var _module_exports = " + content;
     }
 
-    return "var path = '"+jsesc(filePath)+"';\n" +
-        "var html = " + html + ";\n" +
+    // Append a snippet that loads the template into the cache, and exports the path.
+    return contentWithVar + ";\n" + 
+        "var path = '"+jsesc(filePath)+"';\n" +
         (requireAngular ? "var angular = require('angular');\n" : "window.") +
-        "angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put(path, html) }]);\n" +
+        "angular.module('" + ngModule + "').run(['$templateCache', function(c) { c.put(path, _module_exports) }]);\n" +
         "module.exports = path;";
 
     function getAndInterpolateOption(optionKey, def) {
@@ -67,17 +69,6 @@ module.exports = function (content) {
                 regExp: options[optionKey + 'RegExp'] || options['regExp']
             })
             : def
-    }
-
-    function findQuote(content, backwards) {
-        var i = backwards ? content.length - 1 : 0;
-        while (i >= 0 && i < content.length) {
-            if (content[i] === '"' || content[i] === "'") {
-                return i;
-            }
-            i += backwards ? -1 : 1;
-        }
-        return -1;
     }
 
     // source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Using_Special_Characters
