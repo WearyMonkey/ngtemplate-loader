@@ -7,7 +7,7 @@ module.exports = function (content) {
 
     var options = loaderUtils.getOptions(this) || {};
     var ngModule = getAndInterpolateOption.call(this, 'module', 'ng'); // ng is the global angular module that does not need to explicitly required
-    var relativeTo = getAndInterpolateOption.call(this, 'relativeTo', '');
+    var relativeTo = path.normalize(getAndInterpolateOption.call(this, 'relativeTo', ''));
     var prefix = getAndInterpolateOption.call(this, 'prefix', '');
     var requireAngular = !!options.requireAngular || false;
     var absolute = false;
@@ -35,7 +35,7 @@ module.exports = function (content) {
 
     var relativeToIndex = resource.indexOf(relativeTo);
     if (relativeToIndex === -1 || (absolute && relativeToIndex !== 0)) {
-        throw new Error('The path for file doesn\'t contain relativeTo param');
+        throw new Error('The path for file "' + resource + '" doesn\'t contain relativeTo param "' + relativeTo + '".');
     }
 
     // a custom join of prefix using the custom path sep
